@@ -22,6 +22,7 @@ class Messages extends StatelessWidget {
                                 chatSnapshot.data.documents[index]['userId'] ==
                                     futureSnapshot.data.uid,
                                 chatSnapshot.data.documents[index]['username'],
+                                chatSnapshot.data.documents[index]['userImage'],
                                 key: ValueKey(
                                   chatSnapshot.data.documents[index].documentID,
                                 ),

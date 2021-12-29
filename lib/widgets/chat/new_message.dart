@@ -21,12 +21,14 @@ class _NewMessageState extends State<NewMessage> {
       'createdOn': Timestamp.now(),
       'userId': user.uid,
       'username': userData['username'],
+      'userImage': userData['image_url'],
     });
     _controller.clear();
   }
 
   @override
   Widget build(BuildContext context) {
+    print('building3');
     return Container(
       margin: EdgeInsets.only(top: 8),
       padding: EdgeInsets.all(8),
@@ -35,6 +37,9 @@ class _NewMessageState extends State<NewMessage> {
           Expanded(
             child: TextField(
               controller: _controller,
+              textCapitalization: TextCapitalization.sentences,
+              autocorrect: true,
+              enableSuggestions: true,
               decoration: InputDecoration(labelText: 'Send a message...'),
               onChanged: (value) {
                 setState(() {
