@@ -17,7 +17,6 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('building2');
     return Stack(
       children: [
         Row(

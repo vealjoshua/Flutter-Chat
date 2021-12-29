@@ -6,34 +6,27 @@ import '../../widgets/chat/message_bubble.dart';
 class Messages extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: FirebaseAuth.instance.currentUser(),
-      builder: (ctx, futureSnapshot) =>
-          futureSnapshot.connectionState == ConnectionState.waiting
+    final user = FirebaseAuth.instance.currentUser;
+
+    return StreamBuilder(
+      builder: (ctx, chatSnapshot) =>
+          chatSnapshot.connectionState == ConnectionState.waiting
               ? Center(child: CircularProgressIndicator())
-              : StreamBuilder(
-                  builder: (ctx, chatSnapshot) =>
-                      chatSnapshot.connectionState == ConnectionState.waiting
-                          ? Center(child: CircularProgressIndicator())
-                          : ListView.builder(
-                              reverse: true,
-                              itemBuilder: (ctx, index) => MessageBubble(
-                                chatSnapshot.data.documents[index]['text'],
-                                chatSnapshot.data.documents[index]['userId'] ==
-                                    futureSnapshot.data.uid,
-                                chatSnapshot.data.documents[index]['username'],
-                                chatSnapshot.data.documents[index]['userImage'],
-                                key: ValueKey(
-                                  chatSnapshot.data.documents[index].documentID,
-                                ),
-                              ),
-                              itemCount: chatSnapshot.data.documents.length,
-                            ),
-                  stream: Firestore.instance
-                      .collection('chats')
-                      .orderBy('createdOn', descending: true)
-                      .snapshots(),
+              : ListView.builder(
+                  reverse: true,
+                  itemBuilder: (ctx, index) => MessageBubble(
+                    chatSnapshot.data.docs[index].data()['text'],
+                    chatSnapshot.data.docs[index].data()['userId'] == user.uid,
+                    chatSnapshot.data.docs[index].data()['username'],
+                    chatSnapshot.data.docs[index].data()['userImage'],
+                    key: ValueKey(chatSnapshot.data.docs[index].id),
+                  ),
+                  itemCount: chatSnapshot.data.docs.length,
                 ),
+      stream: FirebaseFirestore.instance
+          .collection('chats')
+          .orderBy('createdOn', descending: true)
+          .snapshots(),
     );
   }
 }
